@@ -1,0 +1,8 @@
+# Dependências do Node.js
+node_modules
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Banco de dados de desenvolvimento do SQLite
+dev.sqlite3

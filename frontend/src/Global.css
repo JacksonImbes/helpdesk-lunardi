@@ -1,0 +1,59 @@
+:root {
+  --lunardi-red: #d11a2a;
+  --lunardi-dark: #2d2d2d;
+  --background-light: #f4f7fa;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --border-color: #e2e8f0;
+  --card-background: #ffffff;
+  --sidebar-background: var(--lunardi-dark);
+  --sidebar-text: #a0aec0;
+  --sidebar-text-active: #ffffff;
+  --sidebar-active-bg: rgba(209, 26, 42, 0.5); /* Vermelho com transparência */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  --status-resolvido-bg: #e6fffa;
+  --status-resolvido-text: #38a169;
+  --status-pendente-bg: #fffbe6;
+  --status-pendente-text: #d69e2e;
+  --list-header-bg: #f7fafc;
+  --list-hover-bg: #edf2f7;
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Um reset básico para garantir consistência */
+* {
+  box-sizing: border-box;
+}
+
+.list-container {
+  padding: 0;
+}
+
+.list-header {
+  display: grid;
+  /* CORREÇÃO: Definindo um layout de grid idêntico ao do item */
+  grid-template-columns: 3fr 1fr 1fr 50px;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--list-header-bg);
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-item {
+  display: flex;
+  align-items: center;
+}

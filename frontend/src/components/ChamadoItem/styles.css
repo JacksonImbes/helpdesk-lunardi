@@ -1,0 +1,101 @@
+.chamado-item {
+  display: grid;
+  /* CORREÇÃO: Definindo um layout de grid idêntico ao do cabeçalho */
+  grid-template-columns: 3fr 1fr 1fr 50px; 
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.chamado-item:hover {
+  background-color: var(--list-hover-bg);
+}
+
+.chamado-info {
+  display: flex;
+  align-items: center;
+}
+
+.chamado-id {
+  background-color: var(--background-light);
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-right: 1rem;
+  font-size: 0.8rem;
+}
+
+.chamado-creator {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Adiciona um pequeno espaço entre o ícone e o texto */
+}
+
+.chamado-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem; /* Adiciona espaço abaixo do título */
+}
+
+.chamado-status, .chamado-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o status e as ações */
+}
+
+.chamado-data {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.chamado-data span {
+  margin-left: 0.5rem;
+}
+
+/* Reutilizando e adaptando os badges de status */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+}
+
+.status-aberto {
+  background-color: var(--status-open-bg);
+  color: var(--status-open-text);
+  color:#e2e8f0;
+}
+.status-resolvido {
+  background-color: var(--status-resolvido-bg);
+  color: var(--status-resolvido-text);
+  color:#e2e8f0;
+}
+.status-pendente {
+  background-color: var(--status-pendente-bg);
+  color: var(--status-pendente-text);
+  color:#e2e8f0;
+}
+.status-default {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.chamado-item-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.chamado-item-link:hover {
+  color: inherit;
+}

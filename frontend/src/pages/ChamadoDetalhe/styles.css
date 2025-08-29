@@ -1,0 +1,130 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+.back-link:hover {
+  color: var(--lunardi-red);
+}
+
+.detalhe-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.main-content, .sidebar-content {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.main-content {
+  padding: 2rem;
+}
+
+.chamado-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.5rem 0;
+}
+
+.header-subtext {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.chamado-body h5 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.timeline-section {
+  margin-top: 2rem;
+}
+
+.timeline-section h5 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.details-card, .actions-card {
+  padding: 1.5rem;
+}
+
+.details-card h5, .actions-card h5 {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.details-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.details-card ul li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.details-card ul li strong {
+  color: var(--text-primary);
+}
+
+.comment-placeholder, .actions-placeholder {
+  background-color: var(--background-light);
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  border: 1px dashed var(--border-color);
+}
+
+/* Badges de Status e Prioridade */
+.status-badge-lg {
+  padding: 0.3rem 1rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: white;
+}
+.status-aberto { background-color: var(--lunardi-red); }
+.status-resolvido { background-color: #38A169; }
+.status-pendente { background-color: #d69e2e; }
+
+.priority-badge {
+  text-transform: capitalize;
+  font-weight: 600;
+}
+.priority-baixa { color: #38A169; }
+.priority-media { color: #d69e2e; }
+.priority-alta { color: var(--lunardi-red); }
+
+.timeline-comments {
+  margin-bottom: 2rem;
+  max-height: 500px; /* Adiciona um scroll se a lista ficar muito grande */
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.new-comment-form {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
