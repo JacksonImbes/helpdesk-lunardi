@@ -1,0 +1,40 @@
+.dashboard-container {
+    padding: 2rem;
+}
+
+.list-container {
+    width: 100%;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6; /* Um pouco mais grosso para destacar */
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase; /* Deixa o cabeçalho mais formal */
+    font-size: 0.8rem; /* Tamanho menor para o cabeçalho */
+}
+
+.header-item {
+    flex: 1; /* Distribuição base */
+    display: flex; /* Habilita alinhamento */
+    justify-content: center; /* Centraliza por padrão */
+    align-items: center;
+}
+
+.header-item:first-child {
+    flex: 2; /* Ocupa o dobro do espaço */
+    justify-content: flex-start; /* Alinha à esquerda */
+}
+
+.loading-message, .error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    font-size: 1.2rem;
+    color: #6c757d;
+}

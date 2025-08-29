@@ -12,13 +12,13 @@ const routes = express.Router();
 routes.post('/sessions', SessionController.create);
 
 // --- ROTAS PROTEGIDAS (Acessíveis por qualquer utilizador logado) ---
-routes.get('/chamados/stats', authMiddleware(), ChamadoController.stats);
-routes.get('/chamados', authMiddleware(['admin', 'technician', 'user']), ChamadoController.index);
-routes.post('/chamados', authMiddleware(), ChamadoController.create);
-routes.get('/chamados/:id', authMiddleware(), ChamadoController.show);
-routes.put('/chamados/:id', authMiddleware(), ChamadoController.update);
-routes.delete('/chamados/:id', authMiddleware(), ChamadoController.destroy);
-routes.post('/chamados/:chamado_id/comments', authMiddleware(), CommentController.create);
+routes.get('/chamado/stats', authMiddleware(), ChamadoController.stats);
+routes.get('/chamado', authMiddleware(['admin', 'technician', 'user']), ChamadoController.index);
+routes.post('/chamado', authMiddleware(), ChamadoController.create);
+routes.get('/chamado/:id', authMiddleware(), ChamadoController.show);
+routes.put('/chamado/:id', authMiddleware(), ChamadoController.update);
+routes.delete('/chamado/:id', authMiddleware(), ChamadoController.destroy);
+routes.post('/chamado/:chamado_id/comments', authMiddleware(), CommentController.create);
 routes.get('/inventory', authMiddleware(), InventoryController.index);
 // routes.get('/technicians', authMiddleware(), UserController.indexTechnicians);
 

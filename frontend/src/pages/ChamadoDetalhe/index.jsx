@@ -18,7 +18,7 @@ export default function ChamadoDetalhe() {
 
   const fetchChamado = useCallback(async () => {
     try {
-      const response = await api.get(`/chamados/${id}`);
+      const response = await api.get(`/chamado/${id}`);
       // Agora estas linhas estão CORRETAS, pois o backend envia neste formato
       setChamado(response.data.chamado);
       setComments(response.data.comments);
@@ -46,7 +46,7 @@ export default function ChamadoDetalhe() {
     }
 
     try {
-      const response = await api.post(`/chamados/${id}/comments`,
+      const response = await api.post(`/chamado/${id}/comments`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,7 +85,9 @@ export default function ChamadoDetalhe() {
             <span className={`status-badge-lg status-${chamado.status}`}>{chamado.status}</span>
             <h1>{chamado.title}</h1>
             <p className="header-subtext">
-              Aberto por <strong>{chamado.creator_name || 'Sistema'}</strong> em {format(new Date(chamado.created_at), 'dd/MM/yyyy HH:mm:ss', { timeZone: 'America/Sao_Paulo' })}
+              Aberto por <strong>{chamado.creator_name || 'Sistema'}</strong> em {
+                new Date(chamado.created_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+              }
             </p>
           </div>
 

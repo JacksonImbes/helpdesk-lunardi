@@ -1,16 +1,20 @@
 import React from 'react';
 import './styles.css';
 
-export default function StatCard({ icon, title, value, color }) {
+const StatCard = ({ icon, title, value, color }) => {
   return (
-    <div className="stat-card">
-      <div className="stat-card-icon" style={{ backgroundColor: color }}>
-        {icon}
-      </div>
-      <div className="stat-card-info">
-        <span className="stat-card-title">{title}</span>
-        <span className="stat-card-value">{value}</span>
+    <div className="stat-card-component card shadow-sm">
+      <div className="card-body d-flex align-items-center">
+        <div className="icon-container me-3" style={{ backgroundColor: color }}>
+          {icon}
+        </div>
+        <div className="info-container">
+          <span className="title">{title}</span>
+          <span className="value">{value}</span>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default StatCard;

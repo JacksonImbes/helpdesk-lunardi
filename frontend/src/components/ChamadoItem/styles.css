@@ -1,101 +1,95 @@
-.chamado-item {
-  display: grid;
-  /* CORREÇÃO: Definindo um layout de grid idêntico ao do cabeçalho */
-  grid-template-columns: 3fr 1fr 1fr 50px; 
-  gap: 1rem;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s ease-in-out;
-  cursor: pointer;
+.chamado-item-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e8e8e8;
+    transition: background-color 0.2s ease-in-out;
 }
 
-.chamado-item:hover {
-  background-color: var(--list-hover-bg);
+.chamado-item-component:hover {
+    background-color: #f8f9fa;
+}
+
+.chamado-info, .chamado-status, .chamado-date, .chamado-actions {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chamado-info {
-  display: flex;
-  align-items: center;
+    flex: 2;
+    justify-content: flex-start;
+    gap: 1rem;
 }
 
 .chamado-id {
-  background-color: var(--background-light);
-  color: var(--text-secondary);
-  font-weight: 700;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  margin-right: 1rem;
-  font-size: 0.8rem;
+    color: #8c8c8c;
+    font-weight: 600;
 }
+
+.chamado-title-creator {
+    display: flex;
+    flex-direction: column;
+}
+
+.chamado-title-link {
+    font-weight: 600;
+    color: #262626;
+    text-decoration: none;
+}
+
+.chamado-title-link:hover {
+    text-decoration: underline;
+    color: var(--lunardi-red);
+}
+
 
 .chamado-creator {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 4px; /* Adiciona um pequeno espaço entre o ícone e o texto */
+    font-size: 0.8rem;
+    color: #8c8c8c;
 }
 
-.chamado-title {
-  margin: 0;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem; /* Adiciona espaço abaixo do título */
-}
-
-.chamado-status, .chamado-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Centraliza o status e as ações */
-}
-
-.chamado-data {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; 
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-
-.chamado-data span {
-  margin-left: 0.5rem;
-}
-
-/* Reutilizando e adaptando os badges de status */
+/* --- BADGES DE STATUS --- */
 .status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  text-transform: capitalize;
-  font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #fff;
+    min-width: 110px;
+    text-align: center;
 }
 
-.status-aberto {
-  background-color: var(--status-open-bg);
-  color: var(--status-open-text);
-  color:#e2e8f0;
-}
-.status-resolvido {
-  background-color: var(--status-resolvido-bg);
-  color: var(--status-resolvido-text);
-  color:#e2e8f0;
-}
-.status-pendente {
-  background-color: var(--status-pendente-bg);
-  color: var(--status-pendente-text);
-  color:#e2e8f0;
-}
-.status-default {
-  background-color: #e2e8f0;
-  color: #4a5568;
+.status-aberto { background-color: #f5222d; }
+.status-em-andamento { background-color: #1890ff; }
+.status-pendente { background-color: #faad14; }
+.status-resolvido { background-color: #52c41a; }
+.status-fechado { background-color: #8c8c8c; }
+
+
+.chamado-actions {
+    gap: 0.75rem;
 }
 
-.chamado-item-link {
-  text-decoration: none;
-  color: inherit;
+.action-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.chamado-item-link:hover {
-  color: inherit;
+.action-btn.view-btn { color: #1890ff; }
+.action-btn.delete-btn { color: #f5222d; }
+
+.action-btn:hover {
+    background-color: #e9ecef;
 }

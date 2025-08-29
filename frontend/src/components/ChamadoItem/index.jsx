@@ -1,64 +1,39 @@
 import React from 'react';
-import { FiClock, FiUser, FiTrash2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { format } from 'date-fns-tz';
+import { FiTrash2, FiEye } from 'react-icons/fi';
 import './styles.css';
 
-export default function ChamadoItem({ chamado, onDelete }) {
-
-  const formatarData = (dataString) => {
-    if (!dataString) return 'Data inválida';
-    const data = new Date(dataString.replace(' ', 'T'));
-    return data.toLocaleDateString('pt-BR', {
-      day: '2-digit', month: '2-digit', year: 'numeric'
-    });
-  };
-
-  const getStatusClass = (status) => {
-    switch (status.toLowerCase()) {
-      case 'aberto': return 'status-aberto';
-      case 'resolvido': return 'status-resolvido';
-      case 'pendente': return 'status-pendente';
-      default: return 'status-default';
-    }
-  };
-
-  const handleDelete = (e) => {
-    e.stopPropagation(); // Impede que o clique no botão propague para o Link
-    e.preventDefault();  // Previne a navegação ao apagar
-    if (window.confirm(`Tem a certeza de que deseja apagar o chamado #${chamado.id}?`)) {
-      onDelete(chamado.id);
-    }
-  };
+const ChamadoItem = ({ chamado, onDelete }) => {
+  const dataAberturaFormatada = format(
+    new Date(chamado.created_at), 
+    'dd/MM/yyyy', 
+    { timeZone: 'America/Sao_Paulo' }
+  );
 
   return (
-    <Link to={`/chamado/${chamado.id}`} className="chamado-item-link">
-      <div className="chamado-item">
-        <div className="chamado-info">
-          <span className="chamado-id">#{chamado.id}</span>
-          <div>
-            <h6 className="chamado-title">{chamado.title}</h6>
-            <span className="chamado-creator">
-              <FiUser size={12} />
-              {chamado.creator_name || 'Sistema'}
-            </span>
-          </div>
-        </div>
-        <div className="chamado-status">
-          <span className={`status-badge ${getStatusClass(chamado.status)}`}>
-            {chamado.status}
-          </span>
-        </div>
-        <div className="chamado-data">
-          <FiClock size={14} />
-          <span>{formatarData(chamado.created_at)}</span>
-        </div>
-        <div className="chamado-actions">
-          <Button variant="outline-danger" size="sm" onClick={handleDelete}>
-            <FiTrash2 />
-          </Button>
+    <div className="chamado-item-component">
+      <div className="chamado-info">
+        <span className="chamado-id">#{chamado.id}</span>
+        <div className="chamado-title-creator">
+          <Link to={`/chamado/${chamado.id}`} className="chamado-title-link">{chamado.title}</Link>
+          <span className="chamado-creator">Criado por: {chamado.creator_name || 'Sistema'}</span>
         </div>
       </div>
-    </Link>
+      <div className="chamado-status">
+        <span className={`status-badge status-${chamado.status.toLowerCase().replace(' ', '-')}`}>{chamado.status}</span>
+      </div>
+      <div className="chamado-date">{dataAberturaFormatada}</div>
+      <div className="chamado-actions">
+        <Link to={`/chamado/${chamado.id}`} className="action-btn view-btn" title="Ver Detalhes">
+          <FiEye size={18} />
+        </Link>
+        <button onClick={() => onDelete(chamado.id)} className="action-btn delete-btn" title="Apagar Chamado">
+          <FiTrash2 size={18} />
+        </button>
+      </div>
+    </div>
   );
-}
+};
+
+export default ChamadoItem;

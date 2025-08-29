@@ -1,27 +1,19 @@
-// frontend/src/components/ActionPanel/index.js
 import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { FiHash, FiUser, FiTag, FiCalendar } from 'react-icons/fi'; // Importamos os ícones que vamos usar
+import { format } from 'date-fns-tz'; // Importamos nossa função de formatação de data
 import api from '../../services/api';
-import {FiUser, FiCalendar, FiHash, FiTag } from 'react-icons/fi';
 
-// O componente recebe o objeto 'chamado' e uma função 'onUpdate' como props
 export default function ActionPanel({ chamado, onUpdate }) {
-  // Estados locais para controlar os valores dos dropdowns
   const [status, setStatus] = useState(chamado.status);
   const [priority, setPriority] = useState(chamado.priority);
   const [assignedToId, setAssignedToId] = useState(chamado.assigned_to_id || '');
-  
-  // Estado para armazenar a lista de técnicos que podemos atribuir
   const [technicians, setTechnicians] = useState([]);
 
-  // useEffect para buscar a lista de técnicos e admins quando o componente carregar
   useEffect(() => {
     async function fetchTechnicians() {
       try {
-        // Assumindo que a rota GET /users retorna todos os usuários.
-        // O ideal seria ter uma rota específica /technicians que retorna apenas admins e técnicos.
         const response = await api.get('/users');
-        // Filtramos para pegar apenas usuários que são 'admin' ou 'technician'
         const availableTechnicians = response.data.filter(
           user => user.role === 'admin' || user.role === 'technician'
         );
@@ -31,24 +23,19 @@ export default function ActionPanel({ chamado, onUpdate }) {
       }
     }
     fetchTechnicians();
-  }, []); // O array vazio [] significa que isso roda apenas uma vez
+  }, []);
 
-  // Função chamada quando o formulário é submetido
   async function handleUpdate(e) {
     e.preventDefault();
-
     const data = {
       status,
       priority,
-      // Se "Ninguém" for selecionado, enviamos null para o backend
       assigned_to_id: assignedToId === '' ? null : Number(assignedToId),
     };
 
     try {
-      const response = await api.put(`/chamados/${chamado.id}`, data);
+      const response = await api.put(`/chamado/${chamado.id}`, data);
       alert('Chamado atualizado com sucesso!');
-      // Chamamos a função onUpdate para que a página principal (ChamadoDetalhe)
-      // atualize seu estado com os novos dados do chamado.
       onUpdate(response.data);
     } catch (error) {
       alert('Erro ao atualizar o chamado.');
@@ -58,19 +45,28 @@ export default function ActionPanel({ chamado, onUpdate }) {
 
   return (
     <Form onSubmit={handleUpdate}>
-      <div className="details-card">
+      {/* PAINEL DE DETALHES SEGURO */}
+      <div className="details-card mb-4">
         <h5>Detalhes</h5>
         <ul>
           <li><FiHash /> <strong>ID:</strong> {chamado.id}</li>
           <li><FiUser /> <strong>Atribuído a:</strong> {chamado.assigned_name || 'Ninguém'}</li>
           <li><FiTag /> <strong>Prioridade:</strong> <span className={`priority-badge priority-${chamado.priority}`}>{chamado.priority}</span></li>
-          <li><FiCalendar /> <strong>Resolvido em:</strong> {chamado.closed_at ? new Date(chamado.closed_at.replace(' ', 'T')).toLocaleDateString('pt-BR') : 'Em aberto'}</li>
+          <li>
+            <FiCalendar /> <strong>Resolvido em:</strong> 
+            {/* AQUI ESTÁ A CORREÇÃO: Verificamos se 'chamado.closed_at' existe antes de formatar */}
+            {chamado.closed_at 
+              ? format(new Date(chamado.closed_at), 'dd/MM/yyyy', { timeZone: 'America/Sao_Paulo' }) 
+              : 'Em aberto'
+            }
+          </li>
         </ul>
       </div>
 
+      {/* PAINEL DE AÇÕES */}
       <div className="actions-card">
         <h5>Ações</h5>
-        
+        {/* O resto do seu formulário continua igual */}
         <Form.Group className="mb-3">
           <Form.Label>Status</Form.Label>
           <Form.Control as="select" value={status} onChange={e => setStatus(e.target.value)}>
@@ -97,9 +93,7 @@ export default function ActionPanel({ chamado, onUpdate }) {
           <Form.Control as="select" value={assignedToId} onChange={e => setAssignedToId(e.target.value)}>
             <option value="">Ninguém</option>
             {technicians.map(tech => (
-              <option key={tech.id} value={tech.id}>
-                {tech.name}
-              </option>
+              <option key={tech.id} value={tech.id}>{tech.name}</option>
             ))}
           </Form.Control>
         </Form.Group>

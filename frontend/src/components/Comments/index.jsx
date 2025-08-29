@@ -12,7 +12,7 @@ export default function Comment({ comment }) {
         <div className="comment-header">
           <span className="comment-author-name">{comment.user_name}</span>
           <span className="comment-date">
-            {new Date(comment.created_at.replace(' ', 'T')).toLocaleString('pt-BR')}
+            {new Date(comment.created_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}
           </span>
         </div>
         <p className="comment-text">{comment.content}</p>
