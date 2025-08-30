@@ -1,0 +1,48 @@
+.inventory-item-component {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.inventory-item-component > div {
+    display: flex;
+    align-items: center;
+    /* --- A MÁGICA DO ALINHAMENTO ACONTECE AQUI --- */
+    flex: 1.5; /* Flex para Nº de Série, Status, Atribuído a, Ações */
+    justify-content: center;
+}
+
+.inventory-item-component .inventory-info {
+    flex: 3; /* Dobro do espaço para Nome/Tipo */
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.inventory-name { font-weight: 600; color: #262626; }
+.inventory-type { font-size: 0.8rem; color: #8c8c8c; }
+.inventory-serial, .inventory-assigned { color: #595959; }
+
+/* --- BADGES DE STATUS PARA INVENTÁRIO --- */
+.status-badge-inv {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    min-width: 110px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.status-disponível { background-color: #52c41a; }
+.status-em-uso { background-color: #1890ff; }
+.status-em-manutencao { background-color: #faad14; }
+.status-descartado { background-color: #8c8c8c; }
+
+.inventory-actions { gap: 0.75rem; }
+.action-btn { background: none; border: none; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
+.action-btn.edit-btn { color: #1890ff; }
+.action-btn.delete-btn { color: #f5222d; }
+.action-btn:hover { background-color: #e9ecef; }

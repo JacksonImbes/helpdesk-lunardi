@@ -19,11 +19,11 @@ routes.get('/chamado/:id', authMiddleware(), ChamadoController.show);
 routes.put('/chamado/:id', authMiddleware(), ChamadoController.update);
 routes.delete('/chamado/:id', authMiddleware(), ChamadoController.destroy);
 routes.post('/chamado/:chamado_id/comments', authMiddleware(), CommentController.create);
-routes.get('/inventory', authMiddleware(), InventoryController.index);
+routes.get('/inventario', authMiddleware(), InventoryController.index);
 // routes.get('/technicians', authMiddleware(), UserController.indexTechnicians);
 
 // --- ROTAS DE ADMINISTRAÇÃO (Acessíveis apenas por 'admin' ou 'technician') ---
-routes.post('/inventory', authMiddleware(['admin', 'technician']), InventoryController.create);
+routes.post('/inventario', authMiddleware(['admin', 'technician']), InventoryController.create);
 
 // --- ROTAS DE ADMINISTRAÇÃO (Acessíveis apenas por 'admin') ---
 routes.get('/users', authMiddleware(['admin']), UserController.index);
