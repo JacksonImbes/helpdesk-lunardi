@@ -1,45 +1,43 @@
 const connection = require('../database/connection');
 
 module.exports = {
-  // Listar todos os itens do inventário
   async index(request, response) {
-    const items = await connection('inventory_items')
-      .leftJoin('users', 'inventory_items.assigned_to_id', '=', 'users.id')
-      .select([
-        'inventory_items.*',
-        'users.name as assigned_user_name'
-      ]);
-    return response.json(items);
+    const { id: userId, role } = request.user;
+    
+    try {
+      const query = connection('inventory_items')
+        .leftJoin('users', 'inventory_items.assigned_to_id', '=', 'users.id')
+        .select('inventory_items.*', 'users.name as assigned_user_name');
+        
+      if (role === 'user') {
+        query.where('inventory_items.assigned_to_id', userId);
+      }
+      
+      const items = await query;
+      return response.json(items);
+    } catch (err) {
+      console.error(err);
+      return response.status(500).json({ error: 'Falha ao listar inventário.' });
+    }
   },
 
-  // Criar um novo item no inventário
   async create(request, response) {
-    const { 
-      name, 
-      type, 
-      serial_number, 
-      description, 
-      purchase_date, 
-      status, 
-      assigned_to_id 
-    } = request.body;
+    const { ...itemData } = request.body;
+    
+    try {
+      const [id] = await connection('inventory_items').insert(itemData);
 
-    const [id] = await connection('inventory_items').insert({
-      name,
-      type,
-      serial_number,
-      description,
-      purchase_date,
-      status,
-      assigned_to_id,
-    });
-
-    const newItem = await connection('inventory_items')
-      .leftJoin('users', 'inventory_items.assigned_to_id', '=', 'users.id')
-      .select('inventory_items.*', 'users.name as assigned_user_name')
-      .where('inventory_items.id', id)
-      .first();
-      
-    return response.status(201).json(newItem);
-  }
+      const newItem = await connection('inventory_items')
+        .leftJoin('users', 'inventory_items.assigned_to_id', '=', 'users.id')
+        .select('inventory_items.*', 'users.name as assigned_user_name')
+        .where('inventory_items.id', id)
+        .first();
+          
+      return response.status(201).json(newItem);
+    } catch (err) {
+      console.error(err);
+      return response.status(500).json({ error: 'Falha ao criar item.' });
+    }
+  },
+  
 };

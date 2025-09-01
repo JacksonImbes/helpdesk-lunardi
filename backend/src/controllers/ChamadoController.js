@@ -7,35 +7,30 @@ module.exports = {
     const { id: userId, role } = request.user;
 
     try {
-        const query = connection('chamados')
-            .leftJoin('users', 'users.id', '=', 'chamados.user_id')
-            .select('chamados.*', 'users.name as creator_name')
-            .orderBy('chamados.created_at', 'desc');
+      const query = connection('chamados')
+        .leftJoin('users', 'users.id', '=', 'chamados.user_id')
+        .select('chamados.*', 'users.name as creator_name')
+        .orderBy('chamados.created_at', 'desc');
 
-        if (role === 'user') {
-            query.where('chamados.user_id', userId);
-        }
+      if (role === 'user') {
+        query.where('chamados.user_id', userId);
+      }
 
-        const chamados = await query;
-        
-        // FORMATAMOS A DATA AQUI, NO BACKEND!
-        const formattedChamados = chamados.map(chamado => {
-            const timeZone = 'America/Sao_Paulo';
-            return {
-                ...chamado,
-                created_at_formatted: chamado.created_at 
-                    ? format(new Date(chamado.created_at), 'dd/MM/yyyy HH:mm:ss', { timeZone })
-                    : null,
-            };
-        });
+      const chamados = await query;
 
-        return response.json(formattedChamados);
+      const formattedChamados = chamados.map(chamado => ({
+        ...chamado,
+        created_at: chamado.created_at ? new Date(chamado.created_at).toISOString() : null,
+        closed_at: chamado.closed_at ? new Date(chamado.closed_at).toISOString() : null
+      }));
+
+      return response.json(formattedChamados);
 
     } catch (err) {
-        console.error(err);
-        return response.status(500).json({ error: 'Falha ao listar chamados.' });
+      console.error(err);
+      return response.status(500).json({ error: 'Falha ao listar chamados.' });
     }
-},
+  },
 
   async show(request, response) {
     const { id: chamadoId } = request.params;
@@ -43,76 +38,66 @@ module.exports = {
     const timeZone = 'America/Sao_Paulo'; // Definimos nosso fuso horário alvo
 
     try {
-        const chamado = await connection('chamados')
-            .where('chamados.id', chamadoId)
-            .leftJoin('users as creator', 'creator.id', '=', 'chamados.user_id')
-            .leftJoin('users as assignee', 'assignee.id', '=', 'chamados.assigned_to_id')
-            .select('chamados.*', 'creator.name as creator_name', 'assignee.name as assigned_name')
-            .first();
+      const chamado = await connection('chamados')
+        .where('chamados.id', chamadoId)
+        .leftJoin('users as creator', 'creator.id', '=', 'chamados.user_id')
+        .leftJoin('users as assignee', 'assignee.id', '=', 'chamados.assigned_to_id')
+        .select('chamados.*', 'creator.name as creator_name', 'assignee.name as assigned_name')
+        .first();
 
-        if (!chamado) {
-            return response.status(404).json({ error: 'Chamado não encontrado.' });
-        }
+      if (!chamado) {
+        return response.status(404).json({ error: 'Chamado não encontrado.' });
+      }
 
-        if (role === 'user' && chamado.user_id !== userId) {
-            return response.status(403).json({ error: 'Acesso negado.' });
-        }
-        
-        const comments = await connection('comments')
-            .where('chamado_id', chamadoId)
-            .join('users', 'users.id', '=', 'comments.user_id')
-            .select('comments.*', 'users.name as author_name')
-            .orderBy('created_at', 'asc');
+      if (role === 'user' && chamado.user_id !== userId) {
+        return response.status(403).json({ error: 'Acesso negado.' });
+      }
 
-        // --- LÓGICA DE DATA À PROVA DE FALHAS ---
-        // Agora o backend envia a data UTC pura, sem formatação.
-        // O frontend fará a formatação final.
-        if (chamado.created_at) {
-            chamado.created_at = new Date(chamado.created_at).toISOString();
-        }
-        if (chamado.closed_at) {
-            chamado.closed_at = new Date(chamado.closed_at).toISOString();
-        }
-        const formattedComments = comments.map(comment => ({
-            ...comment,
-            created_at: new Date(comment.created_at).toISOString()
-        }));
-        // --- FIM DA LÓGICA ---
+      const comments = await connection('comments')
+        .where('chamado_id', chamadoId)
+        .join('users', 'users.id', '=', 'comments.user_id')
+        .select('comments.*', 'users.name as author_name')
+        .orderBy('created_at', 'asc');
 
-        return response.json({ chamado, comments: formattedComments });
+      if (chamado.created_at) {
+        chamado.created_at = new Date(chamado.created_at).toISOString();
+      }
+      if (chamado.closed_at) {
+        chamado.closed_at = new Date(chamado.closed_at).toISOString();
+      }
+      const formattedComments = comments.map(comment => ({
+        ...comment,
+        created_at: new Date(comment.created_at).toISOString()
+      }));
+
+      return response.json({ chamado, comments: formattedComments });
 
     } catch (err) {
-        console.error(err);
-        return response.status(500).json({ error: 'Falha ao buscar detalhes do chamado.' });
+      console.error(err);
+      return response.status(500).json({ error: 'Falha ao buscar detalhes do chamado.' });
     }
-},
+  },
 
   async create(request, response) {
     const { title, description, priority } = request.body;
     const { id: userId, role } = request.user;
 
-    if (!title || !description || !priority) {
-      return response.status(400).json({ error: 'Título, descrição e prioridade são obrigatórios.' });
-    }
-
     try {
-      const dadosNovoChamado = {
-        title,
-        description,
-        priority,
-        status: 'Aberto',
-        user_id: userId
-      };
-
+      const dadosNovoChamado = { title, description, priority, status: 'Aberto', user_id: userId };
       if (role === 'admin' || role === 'technician') {
         dadosNovoChamado.assigned_to_id = userId;
       }
 
       const [id] = await connection('chamados').insert(dadosNovoChamado);
 
-      const novoChamado = await connection('chamados').where('id', id).first();
-      return response.status(201).json(novoChamado);
+      const novoChamado = await connection('chamados')
+        .where('chamados.id', id)
+        .leftJoin('users as creator', 'creator.id', '=', 'chamados.user_id')
+        .leftJoin('users as assignee', 'assignee.id', '=', 'chamados.assigned_to_id')
+        .select('chamados.*', 'creator.name as creator_name', 'assignee.name as assigned_name')
+        .first();
 
+      return response.status(201).json(novoChamado);
     } catch (err) {
       console.error(err);
       return response.status(500).json({ error: 'Falha ao criar chamado.' });

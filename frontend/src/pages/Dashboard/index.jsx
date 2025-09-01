@@ -127,10 +127,10 @@ export default function Dashboard() {
           {filteredChamados.length > 0 ? (
             <>
               <div className="list-header">
-                <div className="header-item">Título / Criado por</div>
-                <div className="header-item">Status</div>
-                <div className="header-item">Data de Abertura</div>
-                <div className="header-item">Ações</div>
+                <div className="header-item col-title">Título / Criado por</div>
+                <div className="header-item col-status">Status</div>
+                <div className="header-item col-date">Data de Abertura</div>
+                <div className="header-item col-actions">Ações</div>
               </div>
               {filteredChamados.map(chamado => (
                 <ChamadoItem

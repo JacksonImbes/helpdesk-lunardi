@@ -8,27 +8,25 @@ const authMiddleware = require('./middlewares/auth');
 
 const routes = express.Router();
 
-// --- ROTAS PÚBLICAS ---
 routes.post('/sessions', SessionController.create);
 
-// --- ROTAS PROTEGIDAS (Acessíveis por qualquer utilizador logado) ---
+routes.post('/users', UserController.create);
+
 routes.get('/chamado/stats', authMiddleware(), ChamadoController.stats);
 routes.get('/chamado', authMiddleware(['admin', 'technician', 'user']), ChamadoController.index);
 routes.post('/chamado', authMiddleware(), ChamadoController.create);
-routes.get('/chamado/:id', authMiddleware(), ChamadoController.show);
-routes.put('/chamado/:id', authMiddleware(), ChamadoController.update);
-routes.delete('/chamado/:id', authMiddleware(), ChamadoController.destroy);
+routes.get('/chamado/:id', authMiddleware(['admin', 'technician', 'user']), ChamadoController.show);
+routes.put('/chamado/:id', authMiddleware(['admin', 'technician', 'user']), ChamadoController.update);
 routes.post('/chamado/:chamado_id/comments', authMiddleware(), CommentController.create);
-routes.get('/inventario', authMiddleware(), InventoryController.index);
-// routes.get('/technicians', authMiddleware(), UserController.indexTechnicians);
 
-// --- ROTAS DE ADMINISTRAÇÃO (Acessíveis apenas por 'admin' ou 'technician') ---
+routes.get('/inventario', authMiddleware(['admin', 'technician', 'user']), InventoryController.index);
 routes.post('/inventario', authMiddleware(['admin', 'technician']), InventoryController.create);
+routes.put('/inventario/:id', authMiddleware(['admin', 'technician']), InventoryController.update);
+routes.delete('/inventario/:id', authMiddleware(['admin', 'technician']), InventoryController.destroy);
 
-// --- ROTAS DE ADMINISTRAÇÃO (Acessíveis apenas por 'admin') ---
 routes.get('/users', authMiddleware(['admin']), UserController.index);
-routes.post('/users', authMiddleware(['admin']), UserController.create);
 routes.put('/users/:id', authMiddleware(['admin']), UserController.update);
 routes.delete('/users/:id', authMiddleware(['admin']), UserController.destroy);
+routes.delete('/chamado/:id', authMiddleware(['admin']), ChamadoController.destroy);
 
 module.exports = routes;

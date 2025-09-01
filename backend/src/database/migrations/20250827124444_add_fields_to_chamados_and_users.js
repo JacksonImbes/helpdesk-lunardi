@@ -4,8 +4,6 @@
  */
 exports.up = function(knex) {
   return knex.schema.table('users', (table) => {
-    // Adiciona o campo de permissão. Ex: 'admin', 'technician', 'user'
-    table.string('role').notNullable().defaultTo('user');
   }).then(() => {
     return knex.schema.table('chamados', (table) => {
       // Prioridade do chamado. Ex: 'baixa', 'media', 'alta'
@@ -40,7 +38,6 @@ exports.down = function(knex) {
     table.dropColumn('assigned_to_id');
   }).then(() => {
     return knex.schema.table('users', (table) => {
-      table.dropColumn('role');
     });
   });
 };

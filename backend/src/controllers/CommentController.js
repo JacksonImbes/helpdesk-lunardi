@@ -2,35 +2,40 @@ const connection = require('../database/connection');
 
 module.exports = {
     async create(request, response) {
-        const { chamado_id } = request.params; // Pegamos o ID do chamado da URL
-        const { content } = request.body; // Pegamos o conteúdo do comentário do corpo
-        const { id: userId, role } = request.user; // Pegamos o usuário logado
+        const { chamado_id } = request.params;
+        const { content } = request.body;
+        const { id: userId, role } = request.user;
 
         if (!content) {
             return response.status(400).json({ error: 'O conteúdo do comentário é obrigatório.' });
         }
 
         try {
-            // Passo 1: Verificar se o chamado existe.
             const chamado = await connection('chamados').where('id', chamado_id).first();
             if (!chamado) {
                 return response.status(404).json({ error: 'Chamado não encontrado.' });
             }
 
-            // Passo 2: VERIFICAR PERMISSÃO (A mesma lógica do ChamadoController.show)
-            // Um usuário comum só pode comentar no seu próprio chamado.
             if (role === 'user' && chamado.user_id !== userId) {
                 return response.status(403).json({ error: 'Você não tem permissão para comentar neste chamado.' });
             }
 
-            // Se a permissão for válida, inserimos o comentário.
             const [id] = await connection('comments').insert({
                 content,
                 chamado_id,
                 user_id: userId
             });
             
-            const novoComentario = await connection('comments').where('id', id).first();
+            let novoComentario = await connection('comments')
+                .where('comments.id', id)
+                .join('users', 'users.id', '=', 'comments.user_id')
+                .select('comments.*', 'users.name as author_name')
+                .first();
+
+            if (novoComentario.created_at) {
+                novoComentario.created_at = new Date(novoComentario.created_at).toISOString();
+            }
+
             return response.status(201).json(novoComentario);
 
         } catch (err) {

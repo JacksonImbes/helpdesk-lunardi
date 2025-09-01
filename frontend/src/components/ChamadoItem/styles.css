@@ -1,46 +1,37 @@
 .chamado-item-component {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #e8e8e8;
     transition: background-color 0.2s ease-in-out;
 }
+.chamado-item-component:last-child { border-bottom: none; }
+.chamado-item-component:hover { background-color: #f8f9fa; }
 
-.chamado-item-component:last-child {
-    border-bottom: none;
-}
+/* --- DEFINIÇÃO DAS COLUNAS --- */
+.col-title { flex: 3; display: flex; justify-content: flex-start; align-items: center; gap: 1rem; }
+.col-status { flex: 1.5; display: flex; justify-content: center; align-items: center; }
+.col-date { flex: 1.5; display: flex; justify-content: center; align-items: center; }
+.col-actions { flex: 1.5; display: flex; justify-content: center; align-items: center; gap: 0.75rem; }
+/* --- FIM DA DEFINIÇÃO --- */
 
-.chamado-item-component:hover {
-    background-color: #f8f9fa;
-}
-
-.chamado-item-component > div {
-    flex: 1.5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.chamado-info { flex: 3; justify-content: flex-start; gap: 1rem; }
 .chamado-id { color: #8c8c8c; font-weight: 600; }
 .chamado-title-creator { display: flex; flex-direction: column; }
 .chamado-title-link { font-weight: 600; color: #262626; text-decoration: none; }
 .chamado-title-link:hover { text-decoration: underline; color: var(--lunardi-red); }
 .chamado-creator { font-size: 0.8rem; color: #8c8c8c; }
 
-/* ... (seu código de badges e botões continua o mesmo) ... */
+/* ... (O resto do seu CSS de badges e responsividade continua o mesmo) ... */
 .status-badge { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; color: #fff; min-width: 110px; text-align: center; }
 .status-aberto { background-color: #f5222d; }
 .status-em-andamento { background-color: #1890ff; }
 .status-pendente { background-color: #faad14; }
 .status-resolvido { background-color: #52c41a; }
 .status-fechado { background-color: #8c8c8c; }
-.chamado-actions { gap: 0.75rem; }
 .action-btn { background: none; border: none; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
 .action-btn.view-btn { color: #1890ff; }
 .action-btn.delete-btn { color: #f5222d; }
 .action-btn:hover { background-color: #e9ecef; }
-
 
 /* --- REGRAS DE RESPONSIVIDADE PARA O ITEM DO CHAMADO --- */
 @media (max-width: 768px) {

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import api from '../services/api';
+import setupInterceptors from '../services/setupInterceptors';
 
 const AuthContext = createContext({});
 
@@ -7,13 +8,20 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const signOut = () => {
+    localStorage.removeItem('@HelpdeskLunardi:user');
+    localStorage.removeItem('@HelpdeskLunardi:token');
+    setUser(null);
+  };
+  
   useEffect(() => {
+    setupInterceptors(signOut);
+
     function loadStoragedData() {
       const storagedUser = localStorage.getItem('@HelpdeskLunardi:user');
       const storagedToken = localStorage.getItem('@HelpdeskLunardi:token');
 
       if (storagedUser && storagedToken) {
-        api.defaults.headers.Authorization = `Bearer ${storagedToken}`;
         setUser(JSON.parse(storagedUser));
       }
       setLoading(false);
@@ -27,16 +35,8 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.setItem('@HelpdeskLunardi:user', JSON.stringify(user));
     localStorage.setItem('@HelpdeskLunardi:token', token);
-
-    api.defaults.headers.Authorization = `Bearer ${token}`;
+    
     setUser(user);
-  }
-
-  function signOut() {
-    localStorage.removeItem('@HelpdeskLunardi:user');
-    localStorage.removeItem('@HelpdeskLunardi:token');
-    delete api.defaults.headers.Authorization;
-    setUser(null);
   }
 
   return (

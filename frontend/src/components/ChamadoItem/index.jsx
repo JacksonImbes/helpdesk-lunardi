@@ -13,18 +13,18 @@ const ChamadoItem = ({ chamado, onDelete }) => {
 
   return (
     <div className="chamado-item-component">
-      <div className="chamado-info">
+      <div className="chamado-info col-title">
         <span className="chamado-id">#{chamado.id}</span>
         <div className="chamado-title-creator">
           <Link to={`/chamado/${chamado.id}`} className="chamado-title-link">{chamado.title}</Link>
           <span className="chamado-creator">Criado por: {chamado.creator_name || 'Sistema'}</span>
         </div>
       </div>
-      <div className="chamado-status">
+      <div className="chamado-status col-status">
         <span className={`status-badge status-${chamado.status.toLowerCase().replace(' ', '-')}`}>{chamado.status}</span>
       </div>
-      <div className="chamado-date">{dataAberturaFormatada}</div>
-      <div className="chamado-actions">
+      <div className="chamado-date col-date">{dataAberturaFormatada}</div>
+      <div className="chamado-actions col-actions">
         <Link to={`/chamado/${chamado.id}`} className="action-btn view-btn" title="Ver Detalhes">
           <FiEye size={18} />
         </Link>

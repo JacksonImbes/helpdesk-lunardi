@@ -1,31 +1,20 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3333',
+  // Lê a URL da API do arquivo .env
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
-// --- O INTERCEPTOR COM DEPURADORES ---
+// O interceptor de request continua sendo a melhor forma de anexar o token
 api.interceptors.request.use(
   (config) => {
-    // SENSOR 1: Confirma que o interceptor está a ser ativado para cada pedido.
-    console.log(`[Interceptor] Ativado para o pedido: ${config.method.toUpperCase()} ${config.url}`);
-    
     const token = localStorage.getItem('@HelpdeskLunardi:token');
-
     if (token) {
-      // SENSOR 2: Confirma que o token foi encontrado e qual é o seu valor.
-      console.log('[Interceptor] Token encontrado. A anexar ao cabeçalho.');
       config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      // SENSOR 3: Avisa-nos se nenhum token for encontrado.
-      console.warn('[Interceptor] Nenhum token encontrado no localStorage.');
     }
-
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default api;

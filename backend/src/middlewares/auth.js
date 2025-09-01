@@ -25,7 +25,12 @@ module.exports = (roles) => async (request, response, next) => {
     request.user = user;
 
     // Se a rota exige funções específicas, verificamos se o utilizador tem permissão
-    if (roles && roles.length > 0 && !roles.includes(user.role)) {
+    if (!roles) {
+      return next();
+    }
+
+    // Se 'roles' foi fornecido, verificamos a permissão.
+    if (!roles.includes(user.role)) {
       return response.status(403).json({ error: 'Acesso negado. Permissões insuficientes.' });
     }
 
