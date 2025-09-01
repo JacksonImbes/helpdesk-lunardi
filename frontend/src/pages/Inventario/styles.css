@@ -1,9 +1,16 @@
 .inventory-container {
+    width: 100%; /* GARANTE QUE O CONTAINER OCUPE O ESPAÇO DISPONÍVEL */
+    max-width: 1400px; /* Define um limite para telas muito grandes */
+    margin: 0 auto; /* Centraliza o container quando o limite for atingido */
     padding: 2rem;
 }
 
 .list-container {
-    width: 100%;
+    overflow-x: auto;
+}
+
+.list-header, .inventory-item-component {
+    min-width: 800px;
 }
 
 .list-header {
@@ -20,13 +27,11 @@
 .list-header .header-item {
     display: flex;
     align-items: center;
-    /* --- A MÁGICA DO ALINHAMENTO ACONTECE AQUI --- */
-    /* Estas propriedades devem ser IDÊNTICAS às do item-filho */
-    flex: 1.5; /* Flex para Nº de Série, Status, Atribuído a, Ações */
+    flex: 1.5;
     justify-content: center;
 }
 
 .list-header .header-item:first-child {
-    flex: 3; /* Dobro do espaço para Nome/Tipo */
+    flex: 3;
     justify-content: flex-start;
 }

@@ -7,89 +7,73 @@
     transition: background-color 0.2s ease-in-out;
 }
 
+.chamado-item-component:last-child {
+    border-bottom: none;
+}
+
 .chamado-item-component:hover {
     background-color: #f8f9fa;
 }
 
-.chamado-info, .chamado-status, .chamado-date, .chamado-actions {
-    flex: 1;
-    text-align: center;
+.chamado-item-component > div {
+    flex: 1.5;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
+.chamado-info { flex: 3; justify-content: flex-start; gap: 1rem; }
+.chamado-id { color: #8c8c8c; font-weight: 600; }
+.chamado-title-creator { display: flex; flex-direction: column; }
+.chamado-title-link { font-weight: 600; color: #262626; text-decoration: none; }
+.chamado-title-link:hover { text-decoration: underline; color: var(--lunardi-red); }
+.chamado-creator { font-size: 0.8rem; color: #8c8c8c; }
 
-.chamado-info {
-    flex: 2;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-.chamado-id {
-    color: #8c8c8c;
-    font-weight: 600;
-}
-
-.chamado-title-creator {
-    display: flex;
-    flex-direction: column;
-}
-
-.chamado-title-link {
-    font-weight: 600;
-    color: #262626;
-    text-decoration: none;
-}
-
-.chamado-title-link:hover {
-    text-decoration: underline;
-    color: var(--lunardi-red);
-}
-
-
-.chamado-creator {
-    font-size: 0.8rem;
-    color: #8c8c8c;
-}
-
-/* --- BADGES DE STATUS --- */
-.status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: capitalize;
-    color: #fff;
-    min-width: 110px;
-    text-align: center;
-}
-
+/* ... (seu código de badges e botões continua o mesmo) ... */
+.status-badge { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; color: #fff; min-width: 110px; text-align: center; }
 .status-aberto { background-color: #f5222d; }
 .status-em-andamento { background-color: #1890ff; }
 .status-pendente { background-color: #faad14; }
 .status-resolvido { background-color: #52c41a; }
 .status-fechado { background-color: #8c8c8c; }
-
-
-.chamado-actions {
-    gap: 0.75rem;
-}
-
-.action-btn {
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
+.chamado-actions { gap: 0.75rem; }
+.action-btn { background: none; border: none; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
 .action-btn.view-btn { color: #1890ff; }
 .action-btn.delete-btn { color: #f5222d; }
+.action-btn:hover { background-color: #e9ecef; }
 
-.action-btn:hover {
-    background-color: #e9ecef;
+
+/* --- REGRAS DE RESPONSIVIDADE PARA O ITEM DO CHAMADO --- */
+@media (max-width: 768px) {
+    .chamado-item-component {
+        flex-direction: column; /* Empilha os itens verticalmente */
+        align-items: flex-start; /* Alinha tudo à esquerda */
+        gap: 0.75rem;
+        border: 1px solid #e8e8e8;
+        border-radius: 8px;
+        margin: 0 1rem 1rem 1rem; /* Adiciona margens para parecer um card */
+        padding: 1rem;
+    }
+
+    /* Faz os itens internos ocuparem a largura toda */
+    .chamado-item-component > div {
+        width: 100%;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .chamado-status, .chamado-date {
+        justify-content: space-between; /* Alinha o label e o valor */
+        padding-top: 0.75rem;
+        border-top: 1px dashed #e8e8e8;
+    }
+  
+    /* Adicionamos os labels via CSS para economizar espaço */
+    .chamado-status::before { content: 'Status:'; font-weight: 600; color: #495057; }
+    .chamado-date::before { content: 'Abertura:'; font-weight: 600; color: #495057; }
+    
+    .chamado-actions { 
+        justify-content: flex-end; 
+        border-top: none; 
+        padding-top: 0; 
+    }
 }
