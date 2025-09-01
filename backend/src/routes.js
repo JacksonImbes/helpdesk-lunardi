@@ -5,6 +5,7 @@ const SessionController = require('./controllers/SessionController');
 const InventoryController = require('./controllers/InventoryController');
 const CommentController = require('./controllers/CommentController');
 const authMiddleware = require('./middlewares/auth');
+const ReportController = require('./controllers/ReportController');
 
 const routes = express.Router();
 
@@ -28,5 +29,7 @@ routes.get('/users', authMiddleware(['admin']), UserController.index);
 routes.put('/users/:id', authMiddleware(['admin']), UserController.update);
 routes.delete('/users/:id', authMiddleware(['admin']), UserController.destroy);
 routes.delete('/chamado/:id', authMiddleware(['admin']), ChamadoController.destroy);
+
+routes.get('/reports/chamados-por-dia', authMiddleware(), ReportController.chamadosPorDia);
 
 module.exports = routes;

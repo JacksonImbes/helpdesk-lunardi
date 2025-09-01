@@ -4,6 +4,7 @@ import { FiInbox, FiFileText, FiCheckCircle, FiClock, FiPlusCircle } from 'react
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
+import ChamadosPorDiaChart from '../../components/ChamadosPorDiaChart'
 import StatCard from '../../components/StatCard';
 import ChamadoItem from '../../components/ChamadoItem';
 import './styles.css';
@@ -24,16 +25,20 @@ export default function Dashboard() {
   const [newChamadoDescription, setNewChamadoDescription] = useState('');
   const [newChamadoPriority, setNewChamadoPriority] = useState('Baixa');
 
+  const [chartData, setChartData] = useState([]); 
+
   // --- Funções de busca de dados ---
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const [statsResponse, chamadosResponse] = await Promise.all([
-        api.get('/chamado/stats'),
-        api.get('/chamado')
+      const [statsResponse, chamadosResponse, chartResponse] = await Promise.all([
+        api.get('/chamados/stats'),
+        api.get('/chamados'),
+        api.get('/reports/chamados-por-dia') // Buscamos os dados do novo endpoint
       ]);
       setStats(statsResponse.data);
       setChamados(chamadosResponse.data);
+      setChartData(chartResponse.data); // Salvamos os dados do gráfico no estado
       setError(null);
     } catch (err) {
       console.error("Erro ao buscar dados do dashboard:", err);
@@ -99,11 +104,14 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       {/* SEÇÃO DE ESTATÍSTICAS */}
-      <div className="stats-grid mb-4">
-        <StatCard icon={<FiInbox size={24} />} title="Total de Chamados" value={stats.total} color="#1890ff" />
-        <StatCard icon={<FiFileText size={24} />} title="Chamados Abertos" value={stats.abertos} color="var(--lunardi-red)" />
-        <StatCard icon={<FiClock size={24} />} title="Em Atendimento / Pendentes" value={stats.emAndamento + stats.pendentes} color="#FAAD14" />
-        <StatCard icon={<FiCheckCircle size={24} />} title="Chamados Resolvidos" value={stats.resolvidos} color="#38A169" />
+      <div className="card shadow-sm mb-4">
+        <div className="card-body">
+          {chartData.length > 0 ? (
+            <ChamadosPorDiaChart chartData={chartData} />
+          ) : (
+            <div className='text-center p-5'><p>Não há dados de chamados recentes para exibir no gráfico.</p></div>
+          )}
+        </div>
       </div>
 
       {/* SEÇÃO DA LISTA DE CHAMADOS */}
