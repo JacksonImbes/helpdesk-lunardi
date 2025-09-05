@@ -1,32 +1,34 @@
 .stat-card-component .card-body {
-    padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
 }
 
-.icon-container {
-  padding: 12px;
+.stat-card-component .icon-container {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  color: white;
+  margin-right: 1rem;
+  flex-shrink: 0;
 }
 
-.info-container {
+.stat-card-component .info-container {
   display: flex;
   flex-direction: column;
 }
 
-.info-container .title {
-  font-size: 14px;
-  color: #8c8c8c;
-  margin-bottom: 2px;
+.stat-card-component .title {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
 }
 
-.info-container .value {
-  font-size: 28px;
-  font-weight: 600;
-  color: #262626;
-  line-height: 1.2;
+.stat-card-component .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #212529;
 }

@@ -1,47 +1,192 @@
+/* --- LAYOUT GERAL E ELEMENTOS DO TOPO --- */
 .dashboard-container {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box; /* Garante que padding não cause overflow */
 }
+.welcome-header {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem; padding: 1.5rem; background-color: #fff;
+  border-radius: 8px; border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.welcome-header h2 { margin: 0; font-size: 1.5rem; font-weight: 600; color: #343a40; }
+.welcome-header svg { color: var(--lunardi-red); }
 
 .stats-grid {
-    display: grid;
-    /* 4 colunas em telas grandes */
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 1.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; margin-bottom: 2rem;
 }
 
-.list-container {
-    overflow-x: auto;
+/* --- CORREÇÕES PARA O GRID PRINCIPAL (GRÁFICO E FILA DE PRIORIDADES) --- */
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Default para desktop */
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-/* ... O resto do seu CSS para .list-header, etc. ... */
-.list-header, .chamado-item-component { min-width: 800px; }
-.list-header { display: flex; padding: 1rem 1.5rem; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.8rem; }
-.header-item { flex: 1.5; display: flex; justify-content: center; align-items: center; }
-.header-item:first-child { flex: 3; justify-content: flex-start; }
-.loading-message, .error-message { display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 1.2rem; color: #6c757d; }
+.dashboard-charts, .priorities-panel {
+  min-width: 0; /* Permite que o conteúdo encolha */
+  flex-grow: 1; /* Permite que ocupe espaço disponível */
+}
+
+.priorities-panel .card-header {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+.priorities-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.priority-item {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+  overflow: hidden; /* Oculta o conteúdo que excede */
+  text-overflow: ellipsis; /* Adiciona "..." ao conteúdo oculto */
+}
+.priority-item:last-child {
+  border-bottom: none;
+}
+.priority-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+.priority-indicator.crítica { background-color: #721c24; }
+.priority-indicator.alta { background-color: #f5222d; }
+.priority-indicator.média { background-color: #faad14; }
+.priority-indicator.baixa { background-color: #1890ff; }
+.priority-item-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Essencial para que o texto interno do item também não transborde */
+}
+.priority-item-title {
+  font-weight: 500;
+  color: #212529;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.priority-item-title:hover {
+  text-decoration: underline;
+}
+.priority-item-creator {
+  font-size: 0.8rem;
+  color: #6c757d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- LISTA DE CHAMADOS: A SOLUÇÃO DEFINITIVA COM FLEXBOX --- */
+
+/* A linha base partilhada pelo cabeçalho e pelos itens */
+.chamado-list-row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box; /* Garante que padding não cause overflow */
+}
+
+/* As colunas com larguras e alinhamentos definidos */
+.chamado-list-row > .col-title { flex: 1; min-width: 0; display: flex; align-items: center; gap: 1rem; }
+.chamado-list-row > .col-status { width: 150px; display: flex; justify-content: center; flex-shrink: 0; }
+.chamado-list-row > .col-date { width: 180px; display: flex; justify-content: center; flex-shrink: 0; }
+.chamado-list-row > .col-actions { width: 120px; display: flex; justify-content: center; gap: 0.75rem; flex-shrink: 0; }
 
 
-/* --- REGRAS DE RESPONSIVIDADE --- */
+/* Estilos visuais para o CABEÇALHO */
+.chamado-list-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* Estilos visuais para cada ITEM da lista */
+.chamado-item {
+  border-bottom: 1px solid #e8e8e8;
+  transition: background-color 0.2s ease-in-out;
+}
+.chamado-list-body > .chamado-item:last-child {
+  border-bottom: none;
+}
+.chamado-item:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+/* Estilos do conteúdo DENTRO das colunas (badges, botões, etc.) */
+.chamado-id { color: #8c8c8c; font-weight: 600; flex-shrink: 0; }
+.chamado-title-creator { display: flex; flex-direction: column; min-width: 0; }
+.chamado-title-link { font-weight: 600; color: #262626; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chamado-item:hover .chamado-title-link { text-decoration: underline; color: var(--lunardi-red); }
+.chamado-creator { font-size: 0.8rem; color: #8c8c8c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-badge { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; color: #fff; display: inline-block; min-width: 110px; text-align: center; }
+.status-aberto { background-color: #f5222d; }
+.status-em-andamento { background-color: #1890ff; }
+.status-pendente { background-color: #faad14; }
+.status-resolvido { background-color: #52c41a; }
+.status-fechado { background-color: #8c8c8c; }
+.action-btn { background: none; border: none; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
+.action-btn.view-btn { color: #1890ff; }
+.action-btn.delete-btn { color: #f5222d; }
+.action-btn:hover { background-color: #e9ecef; }
+
+
+/* --- REGRAS DE RESPONSIVIDADE PARA TODA A PÁGINA --- */
 @media (max-width: 1200px) {
-    .stats-grid {
-        /* 2 colunas em telas de tablet */
-        grid-template-columns: repeat(2, 1fr); 
-    }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 992px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr; /* GRÁFICO E FILA EM COLUNA ÚNICA */
+  }
 }
 
 @media (max-width: 768px) {
-    .stats-grid {
-        /* 1 coluna em telas de celular */
-        grid-template-columns: 1fr; 
-    }
-    .dashboard-container {
-        padding: 1rem;
-    }
-    .card-header {
-        flex-direction: column;
-        gap: 1rem;
-    }
+  .dashboard-container { padding: 1rem; }
+  .welcome-header h2 { font-size: 1.2rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .card-header { flex-direction: column; gap: 1rem; }
+
+  /* Transforma a lista de chamados em "cards" em telemóveis */
+  .chamado-list-header { display: none; } /* Oculta o cabeçalho da lista */
+  .chamado-item.chamado-list-row {
+    flex-direction: column; align-items: flex-start; gap: 0.75rem;
+    border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 1rem; padding: 1rem;
+  }
+  .chamado-item.chamado-list-row > div { width: 100%; justify-content: flex-start; text-align: left; }
+  
+  /* Ajusta o alinhamento e adiciona labels para status e data em mobile */
+  .chamado-item .col-status, .chamado-item .col-date {
+    justify-content: space-between; padding-top: 0.75rem; border-top: 1px dashed #e8e8e8;
+    width: 100%; /* Garante que ocupem a largura total */
+  }
+  .chamado-item .col-status::before { content: 'Status:'; font-weight: 600; color: #495057; }
+  .chamado-item .col-date::before { content: 'Data:'; font-weight: 600; color: #495057; }
+  .chamado-item .col-actions { justify-content: flex-end; width: 100%; }
+  .chamado-item .col-title {
+    flex-direction: column; /* Título e criador ficam em coluna */
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
 }

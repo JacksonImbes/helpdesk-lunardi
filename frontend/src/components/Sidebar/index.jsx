@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { FiGrid, FiHardDrive, FiUsers, FiLogOut, FiSettings, FiChevronDown, FiArchive } from 'react-icons/fi';
+import { NavLink, Link } from 'react-router-dom';
+import { FiGrid, FiUsers, FiLogOut, FiSettings, FiChevronDown, FiArchive } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import logoBranca from '../../assets/images/logo_rodape.png';
 import './styles.css';
@@ -16,9 +16,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   return (
     <>
       <aside className="sidebar-container">
-        <div className="sidebar-header">
-          <img src={logoBranca} alt="Transportadora Lunardi" className="sidebar-logo" />
-        </div>
+        <Link to="/" className="sidebar-header">
+          <img src={logoBranca} alt="Transportadora Lunardi - Dashboard" className="sidebar-logo" />
+        </Link>
 
         <nav className="sidebar-nav">
           <NavLink to="/" end><FiGrid size={20} /><span>Dashboard</span></NavLink>

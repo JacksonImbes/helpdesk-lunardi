@@ -10,9 +10,10 @@ export default function Comment({ comment }) {
       </div>
       <div className="comment-content">
         <div className="comment-header">
-          <span className="comment-author-name">{comment.user_name}</span>
+          {/* CORREÇÃO: O backend envia 'author_name', e não 'user_name' */}
+          <span className="comment-author-name">{comment.author_name}</span>
           <span className="comment-date">
-            {new Date(comment.created_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}
+            {new Date(comment.created_at).toLocaleString('pt-BR')}
           </span>
         </div>
         <p className="comment-text">{comment.content}</p>

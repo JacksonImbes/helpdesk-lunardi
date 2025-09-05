@@ -11,7 +11,7 @@ export default function AppRoutes() {
     <Layout>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/chamado/:id" element={<ChamadoDetalhe />} />
+        <Route path="/chamados/:id" element={<ChamadoDetalhe />} />
         <Route path="/inventario" element={<Inventario />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="*" element={<Navigate to="/" />} />

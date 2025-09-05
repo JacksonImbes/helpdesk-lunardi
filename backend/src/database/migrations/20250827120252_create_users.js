@@ -10,6 +10,12 @@ exports.up = function(knex) {
     table.string('email').notNullable().unique();
     table.string('password').notNullable();
     table.string('role').notNullable().defaultTo('user');
+    table.string('cpf');
+    table.string('phone');
+    table.date('admission_date');
+    table.string('position');
+    table.string('department');
+    table.string('status').notNullable().defaultTo('ativo');
     table.timestamps(true, true);
   });
 };

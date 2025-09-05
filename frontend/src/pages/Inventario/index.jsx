@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { FiPlusCircle } from 'react-icons/fi';
 import api from '../../services/api';
-import { useAuth } from '../../contexts/AuthContext'; 
+import { useAuth } from '../../contexts/AuthContext';
 
 import InventoryItem from '../../components/InventoryItem';
 import './styles.css';
@@ -19,7 +19,7 @@ export default function Inventario() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get('/inventario');
+      const response = await api.get('/inventory');
       setInventory(response.data);
     } catch (err) {
       console.error("Erro ao buscar inventário:", err);
@@ -55,7 +55,7 @@ export default function Inventario() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const method = isEditing ? 'put' : 'post';
-    const url = isEditing ? `/inventario/${currentItem.id}` : '/inventario';
+    const url = isEditing ? `/inventory/${currentItem.id}` : '/inventory';
 
     try {
       await api[method](url, currentItem);
@@ -71,7 +71,7 @@ export default function Inventario() {
   const handleDeleteItem = async (id) => {
     if (window.confirm('Tem certeza que deseja apagar este item?')) {
         try {
-            await api.delete(`/inventario/${id}`);
+            await api.delete(`/inventory/${id}`);
             alert('Item apagado com sucesso.');
             fetchData();
         } catch (err) {

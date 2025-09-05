@@ -1,7 +1,6 @@
-require('dotenv').config();
+import 'dotenv/config';
 
-module.exports = {
-  // Lê o segredo do ambiente, com um valor padrão caso não seja encontrado
-  secret: process.env.APP_SECRET || 'TLun@t1#2025',
-  expiresIn: '7d',
+export default {
+  secret: process.env.JWT_SECRET || 'fallback_secret_para_desenvolvimento',
+  expiresIn: process.env.JWT_EXPIRES_IN || '7d',
 };

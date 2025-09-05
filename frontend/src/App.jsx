@@ -1,10 +1,12 @@
 import React from 'react';
+// CORREÇÃO 1: Importa o useAuth diretamente do contexto para garantir consistência
 import { useAuth } from './contexts/AuthContext';
 import AppRoutes from './routes/app.routes';
 import AuthRoutes from './routes/auth.routes';
 
 function App() {
-  const { signed, loading } = useAuth();
+  // CORREÇÃO 2: Pega 'user' do contexto, em vez de 'signed'
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -14,7 +16,8 @@ function App() {
     );
   }
 
-  return signed ? <AppRoutes /> : <AuthRoutes />;
+  // CORREÇÃO 3: A decisão de qual rota mostrar é baseada na existência do 'user'
+  return user ? <AppRoutes /> : <AuthRoutes />;
 }
 
 export default App;

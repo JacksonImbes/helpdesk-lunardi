@@ -1,46 +1,50 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import api from '../services/api';
-import setupInterceptors from '../services/setupInterceptors';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({ user: null, loading: true });
 
-  const signOut = () => {
-    localStorage.removeItem('@HelpdeskLunardi:user');
-    localStorage.removeItem('@HelpdeskLunardi:token');
-    setUser(null);
-  };
-  
   useEffect(() => {
-    setupInterceptors(signOut);
+    async function loadStoragedData() {
+      const token = localStorage.getItem('@lunardi-helpdesk/token');
+      const user = localStorage.getItem('@lunardi-helpdesk/user');
 
-    function loadStoragedData() {
-      const storagedUser = localStorage.getItem('@HelpdeskLunardi:user');
-      const storagedToken = localStorage.getItem('@HelpdeskLunardi:token');
-
-      if (storagedUser && storagedToken) {
-        setUser(JSON.parse(storagedUser));
+      if (token && user) {
+        // Valida o token na API para garantir que a sessão ainda é válida
+        try {
+          await api.get('/sessions/validate');
+          setData({ user: JSON.parse(user), loading: false });
+        } catch (error) {
+          // Se o token for inválido, limpa o armazenamento
+          signOut();
+        }
+      } else {
+        setData({ user: null, loading: false });
       }
-      setLoading(false);
     }
     loadStoragedData();
   }, []);
 
-  async function signIn(email, password) {
+  const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('/sessions', { email, password });
-    const { user, token } = response.data;
+    const { token, user } = response.data;
 
-    localStorage.setItem('@HelpdeskLunardi:user', JSON.stringify(user));
-    localStorage.setItem('@HelpdeskLunardi:token', token);
+    localStorage.setItem('@lunardi-helpdesk/token', token);
+    localStorage.setItem('@lunardi-helpdesk/user', JSON.stringify(user));
     
-    setUser(user);
-  }
+    setData({ user, loading: false });
+  }, []);
+
+  const signOut = useCallback(() => {
+    localStorage.removeItem('@lunardi-helpdesk/token');
+    localStorage.removeItem('@lunardi-helpdesk/user');
+    setData({ user: null, loading: false });
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, loading: data.loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
