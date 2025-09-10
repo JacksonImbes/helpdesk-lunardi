@@ -1,36 +1,39 @@
-/* --- LAYOUT GERAL E ELEMENTOS DO TOPO --- */
 .dashboard-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 2rem;
-  box-sizing: border-box; /* Garante que padding não cause overflow */
+  background-color: #f0f2f5;
 }
+
 .welcome-header {
-  display: flex; align-items: center; gap: 1rem;
-  margin-bottom: 2rem; padding: 1.5rem; background-color: #fff;
-  border-radius: 8px; border: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: #333;
 }
-.welcome-header h2 { margin: 0; font-size: 1.5rem; font-weight: 600; color: #343a40; }
-.welcome-header svg { color: var(--lunardi-red); }
+
+.welcome-header h2 {
+  font-weight: 600;
+  margin: 0;
+}
 
 .stats-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem; margin-bottom: 2rem;
-}
-
-/* --- CORREÇÕES PARA O GRID PRINCIPAL (GRÁFICO E FILA DE PRIORIDADES) --- */
-.dashboard-main-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* Default para desktop */
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.dashboard-charts, .priorities-panel {
-  min-width: 0; /* Permite que o conteúdo encolha */
-  flex-grow: 1; /* Permite que ocupe espaço disponível */
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .priorities-panel .card-header {
@@ -38,155 +41,156 @@
   display: flex;
   align-items: center;
 }
+
 .priorities-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 350px;
+  max-height: 400px;
   overflow-y: auto;
 }
+
 .priority-item {
   display: flex;
   align-items: center;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #e9ecef;
-  white-space: nowrap; /* Impede que o texto quebre em várias linhas */
-  overflow: hidden; /* Oculta o conteúdo que excede */
-  text-overflow: ellipsis; /* Adiciona "..." ao conteúdo oculto */
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
 }
+
 .priority-item:last-child {
   border-bottom: none;
 }
+
+.priority-item:hover {
+  background-color: #fafafa;
+}
+
 .priority-indicator {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  margin-right: 1rem;
+  margin-right: 15px;
   flex-shrink: 0;
 }
-.priority-indicator.crítica { background-color: #721c24; }
-.priority-indicator.alta { background-color: #f5222d; }
-.priority-indicator.média { background-color: #faad14; }
-.priority-indicator.baixa { background-color: #1890ff; }
+
+.priority-indicator.crítica { background-color: #d32f2f; }
+.priority-indicator.alta { background-color: #f57c00; }
+.priority-indicator.média { background-color: #1976d2; }
+.priority-indicator.baixa { background-color: #757575; }
+
 .priority-item-details {
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Essencial para que o texto interno do item também não transborde */
 }
+
 .priority-item-title {
   font-weight: 500;
-  color: #212529;
+  color: #333;
   text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
+
 .priority-item-title:hover {
   text-decoration: underline;
+  color: var(--lunardi-red);
 }
+
 .priority-item-creator {
-  font-size: 0.8rem;
-  color: #6c757d;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 12px;
+  color: #888;
 }
 
-/* --- LISTA DE CHAMADOS: A SOLUÇÃO DEFINITIVA COM FLEXBOX --- */
+/* --- ESTILOS COMPLETOS PARA A LISTA DE CHAMADOS --- */
+.chamado-list-container {
+  overflow-x: auto; /* Garante que a tabela não quebre o layout em telas muito pequenas */
+}
 
-/* A linha base partilhada pelo cabeçalho e pelos itens */
+.chamado-list-body {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
 .chamado-list-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr; /* 4 colunas com proporções definidas */
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
   align-items: center;
-  padding: 0.75rem 1.5rem;
-  width: 100%;
-  box-sizing: border-box; /* Garante que padding não cause overflow */
 }
 
-/* As colunas com larguras e alinhamentos definidos */
-.chamado-list-row > .col-title { flex: 1; min-width: 0; display: flex; align-items: center; gap: 1rem; }
-.chamado-list-row > .col-status { width: 150px; display: flex; justify-content: center; flex-shrink: 0; }
-.chamado-list-row > .col-date { width: 180px; display: flex; justify-content: center; flex-shrink: 0; }
-.chamado-list-row > .col-actions { width: 120px; display: flex; justify-content: center; gap: 0.75rem; flex-shrink: 0; }
-
-
-/* Estilos visuais para o CABEÇALHO */
 .chamado-list-header {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #e9ecef;
   font-weight: 600;
-  color: #6c757d;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-}
-
-/* Estilos visuais para cada ITEM da lista */
-.chamado-item {
-  border-bottom: 1px solid #e8e8e8;
-  transition: background-color 0.2s ease-in-out;
-}
-.chamado-list-body > .chamado-item:last-child {
-  border-bottom: none;
-}
-.chamado-item:hover {
+  color: #495057;
   background-color: #f8f9fa;
-  cursor: pointer;
+  border-bottom: 2px solid #dee2e6;
+  padding: 0.75rem 1rem;
 }
 
-/* Estilos do conteúdo DENTRO das colunas (badges, botões, etc.) */
-.chamado-id { color: #8c8c8c; font-weight: 600; flex-shrink: 0; }
-.chamado-title-creator { display: flex; flex-direction: column; min-width: 0; }
-.chamado-title-link { font-weight: 600; color: #262626; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chamado-item:hover .chamado-title-link { text-decoration: underline; color: var(--lunardi-red); }
-.chamado-creator { font-size: 0.8rem; color: #8c8c8c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.status-badge { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; color: #fff; display: inline-block; min-width: 110px; text-align: center; }
-.status-aberto { background-color: #f5222d; }
-.status-em-andamento { background-color: #1890ff; }
-.status-pendente { background-color: #faad14; }
-.status-resolvido { background-color: #52c41a; }
-.status-fechado { background-color: #8c8c8c; }
-.action-btn { background: none; border: none; padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
-.action-btn.view-btn { color: #1890ff; }
-.action-btn.delete-btn { color: #f5222d; }
-.action-btn:hover { background-color: #e9ecef; }
-
-
-/* --- REGRAS DE RESPONSIVIDADE PARA TODA A PÁGINA --- */
-@media (max-width: 1200px) {
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+.col-title {
+  font-weight: 500;
 }
 
-@media (max-width: 992px) {
-  .dashboard-main-grid {
-    grid-template-columns: 1fr; /* GRÁFICO E FILA EM COLUNA ÚNICA */
-  }
+.col-status,
+.col-date,
+.col-actions {
+  text-align: center;
 }
 
+.col-actions {
+  justify-content: center; /* Centraliza o conteúdo (botões) */
+}
+
+/* --- RESPONSIVIDADE PARA A LISTA DE CHAMADOS --- */
 @media (max-width: 768px) {
-  .dashboard-container { padding: 1rem; }
-  .welcome-header h2 { font-size: 1.2rem; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .card-header { flex-direction: column; gap: 1rem; }
+  .chamado-list-header {
+    display: none; /* Esconde o cabeçalho fixo em telas pequenas */
+  }
 
-  /* Transforma a lista de chamados em "cards" em telemóveis */
-  .chamado-list-header { display: none; } /* Oculta o cabeçalho da lista */
-  .chamado-item.chamado-list-row {
-    flex-direction: column; align-items: flex-start; gap: 0.75rem;
-    border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 1rem; padding: 1rem;
+  .chamado-list-row {
+    grid-template-columns: 1fr; /* Muda para layout de uma coluna */
+    gap: 0.5rem;
+    padding-bottom: 1.5rem;
+    position: relative; /* Para o pseudo-elemento do cabeçalho */
   }
-  .chamado-item.chamado-list-row > div { width: 100%; justify-content: flex-start; text-align: left; }
   
-  /* Ajusta o alinhamento e adiciona labels para status e data em mobile */
-  .chamado-item .col-status, .chamado-item .col-date {
-    justify-content: space-between; padding-top: 0.75rem; border-top: 1px dashed #e8e8e8;
-    width: 100%; /* Garante que ocupem a largura total */
+  .col-title,
+  .col-status,
+  .col-date,
+  .col-actions {
+    text-align: left; /* Alinha tudo à esquerda */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  .chamado-item .col-status::before { content: 'Status:'; font-weight: 600; color: #495057; }
-  .chamado-item .col-date::before { content: 'Data:'; font-weight: 600; color: #495057; }
-  .chamado-item .col-actions { justify-content: flex-end; width: 100%; }
-  .chamado-item .col-title {
-    flex-direction: column; /* Título e criador ficam em coluna */
-    align-items: flex-start;
-    gap: 0.25rem;
+  
+  /* Adiciona "cabeçalhos" falsos antes de cada item de dados para clareza */
+  .col-title::before,
+  .col-status::before,
+  .col-date::before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 80px; /* Largura fixa para os "labels" */
+    flex-shrink: 0;
+    color: #6c757d;
+  }
+
+  .col-actions {
+    justify-content: flex-start; /* Alinha botões à esquerda */
+    padding-top: 0.5rem;
   }
 }
+
+
+/* Adicionando o estilo de erro da versão anterior */
+.error-message {
+  color: #e53e3e;
+  text-align: center;
+  padding: 20px;
+  background-color: #fff1f0;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+

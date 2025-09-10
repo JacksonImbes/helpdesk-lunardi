@@ -1,6 +1,6 @@
-import connection from '../database/connection.js';
+const connection = require('../database/connection');
 
-export default {
+module.exports = {
   /**
    * Adiciona um novo comentário a um chamado.
    */

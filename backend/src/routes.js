@@ -1,34 +1,50 @@
-import express from 'express';
-// --- CORREÇÃO CRÍTICA ---
-// Adicionada a extensão .js, que é obrigatória para importações de módulos locais em Node.js com "type": "module".
-import authMiddleware from './middlewares/auth.js';
+const express = require('express');
+const { celebrate, Segments, Joi } = require('celebrate');
+
+const authMiddleware = require('./middlewares/auth');
 
 // Controllers
-// --- CORREÇÃO CRÍTICA ---
-// Adicionada a extensão .js a todas as importações de controllers.
-import SessionController from './controllers/SessionController.js';
-import UserController from './controllers/UserController.js';
-import ChamadoController from './controllers/ChamadoController.js';
-import CommentController from './controllers/CommentController.js';
-import InventoryController from './controllers/InventoryController.js';
-import ReportController from './controllers/ReportController.js';
+const SessionController = require('./controllers/SessionController');
+const UserController = require('./controllers/UserController');
+const ChamadoController = require('./controllers/ChamadoController');
+const CommentController = require('./controllers/CommentController');
+const InventoryController = require('./controllers/InventoryController');
+const ReportController = require('./controllers/ReportController');
 
 const routes = express.Router();
 
 // --- ROTAS PÚBLICAS ---
-// Cria uma nova sessão (login)
 routes.post('/sessions', SessionController.create);
-// Cria um novo usuário
-routes.post('/users', UserController.create);
+
+routes.post('/users', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+    role: Joi.string().required().valid('admin', 'tech', 'user'),
+    department: Joi.string().required(),
+    phone: Joi.string().required(),
+  })
+}), UserController.create);
+
 
 // --- ROTAS PROTEGIDAS ---
-// Rota para o frontend validar se um token ainda é ativo
+
 routes.get('/sessions/validate', authMiddleware, (req, res) => {
   return res.status(200).send();
 });
 
-// --- ROTAS DE RELATÓRIOS ---
-routes.get('/reports/chamados-por-dia', authMiddleware, ReportController.chamadosPorDia);
+// --- ROTAS DE DASHBOARD E RELATÓRIOS ---
+routes.get('/dashboard/kpis', authMiddleware, ChamadoController.kpis);
+
+// Rota para o relatório de chamados por dia, agora com validação de datas
+routes.get('/dashboard/reports/chamados-por-dia', authMiddleware, celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    startDate: Joi.date().iso().required(), // Valida data no formato YYYY-MM-DD
+    endDate: Joi.date().iso().required(),
+  }),
+}), ReportController.chamadosPorDia);
+
 
 // --- ROTAS DE CHAMADOS ---
 routes.get('/chamados/personal', authMiddleware, ChamadoController.personal);
@@ -53,4 +69,4 @@ routes.get('/users', authMiddleware, UserController.index);
 routes.put('/users/:id', authMiddleware, UserController.update);
 routes.delete('/users/:id', authMiddleware, UserController.destroy);
 
-export default routes;
+module.exports = routes;

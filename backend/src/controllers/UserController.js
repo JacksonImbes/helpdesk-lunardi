@@ -1,7 +1,7 @@
-import connection from '../database/connection.js';
-import bcrypt from 'bcryptjs';
+const connection = require('../database/connection');
+const bcrypt = require('bcryptjs');
 
-export default {
+module.exports = {
   /**
    * Lista todos os usuários.
    */

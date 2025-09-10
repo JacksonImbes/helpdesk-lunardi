@@ -1,55 +1,96 @@
-import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import React, { useState, useEffect } from 'react';
+import { Card } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import DatePicker from 'react-datepicker';
+import { subDays, format } from 'date-fns';
+import api from '../../services/api';
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
+import "react-datepicker/dist/react-datepicker.css";
+import './styles.css';
 
-const ChamadosPorStatusChart = ({ stats }) => {
-  const data = {
-    labels: ['Abertos', 'Em Andamento', 'Concluídos'],
-    datasets: [
-      {
-        label: '# de Chamados',
-        data: [
-          stats.abertos,
-          stats.emAndamento + stats.pendentes, 
-          stats.resolvidos,
-        ],
-        backgroundColor: [
-          'rgba(245, 34, 45, 0.7)',  
-          '#faad149a', 
-          'rgba(82, 196, 26, 0.7)',  
-        ],
-        borderColor: [
-          'rgba(245, 34, 45, 1)',
-          '#faad14',
-          'rgba(82, 196, 26, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+const ChamadosPorDiaChart = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState(subDays(new Date(), 30));
+  const [endDate, setEndDate] = useState(new Date());
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Distribuição de Chamados por Status',
-        font: { size: 18 }
-      },
-    },
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+      const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.get('/dashboard/reports/chamados-por-dia', {
+          params: { startDate: formattedStartDate, endDate: formattedEndDate },
+        });
+        setData(response.data);
+      } catch (err) {
+        setError('Erro ao carregar dados do gráfico.');
+        console.error("Erro ao buscar dados do gráfico:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [startDate, endDate]);
 
   return (
-    <div style={{ height: '350px', width: '100%' }}>
-      <Doughnut data={data} options={options} />
-    </div>
+    <Card className="shadow-sm h-100">
+      <Card.Body>
+        <div className="chart-header">
+          <Card.Title as="h2">Chamados Criados por Dia</Card.Title>
+          <div className="date-picker-wrapper">
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="dd/MM/yyyy"
+              className="form-control form-control-sm"
+            />
+            <span className="date-separator">até</span>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              dateFormat="dd/MM/yyyy"
+              className="form-control form-control-sm"
+            />
+          </div>
+        </div>
+        
+        {loading && <p className="text-center p-5">Carregando gráfico...</p>}
+        {error && <p className="error-message">{error}</p>}
+        
+        {!loading && !error && data.length > 0 && (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" name="Novos Chamados" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+
+        {!loading && !error && data.length === 0 && (
+          <div className="empty-state">
+            <p>Nenhum chamado encontrado no período selecionado.</p>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 
-export default ChamadosPorStatusChart;
+export default ChamadosPorDiaChart;
